@@ -20,14 +20,25 @@ class Circle {
         ellipse(this.x, this.y, this.size);
         this.log();
     }
+    is_near(x, y) {
+        if (abs(this.x - x) >= NEAR_RANGE) {
+            return false;
+        }
+        if (abs(this.y - y) >= NEAR_RANGE) {
+            return false;
+        }
+        return true;
+    }
     log(prefix = '') {
         console.log(`${prefix} x, y, size = ${this.x}, ${this.y}, ${this.size}, ${this.color}`);
     }
 }
 
 const COLOR_BG = '#000';
-const MAX_DOTS = 50;
+const COLOR_OBJ = '#AAA';
+const MAX_DOTS = 350;
 const DOT_SIZE = 5;
+const NEAR_RANGE = 30;
 
 let dots = [];
 
@@ -46,11 +57,19 @@ function setup() {
 
 function draw() {
     background(COLOR_BG);
-    fill('#0A0');
+    fill(COLOR_OBJ);
+    stroke(COLOR_OBJ);
     // 図形描画
-    dots.forEach(dot => {
-        dot.draw();
-    });
+    for (var curr_i = 0; curr_i < MAX_DOTS; curr_i++) {
+        const curr_dot = dots[curr_i];
+        curr_dot.draw();
+        for (var chk_i = curr_i + 1; chk_i < MAX_DOTS; chk_i++) {
+            const chk_dot = dots[chk_i];
+            if (curr_dot.is_near(chk_dot.x, chk_dot.y)) {
+                line(curr_dot.x, curr_dot.y, chk_dot.x, chk_dot.y);
+            }
+        }
+    }
 }
 
 function randomInt(min, max) {
