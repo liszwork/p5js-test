@@ -26,29 +26,31 @@ class Circle {
 }
 
 const COLOR_BG = '#000';
+const MAX_DOTS = 50;
+const DOT_SIZE = 5;
 
-let o;
+let dots = [];
 
 function setup() {
     //キャンバスを作成
     createCanvas(400, 600);
     //背景色
     background(COLOR_BG);
-    
-    o = new Circle(width / 2, height / 2, 50, '#A00');
+
+    for ( let i = 0; i < MAX_DOTS; i++ ) {
+        const x = randomInt(0, width);
+        const y = randomInt(0, height);
+        dots.push(new Circle(x, y, DOT_SIZE, '#AAB'));
+    }
 }
 
 function draw() {
     background(COLOR_BG);
     fill('#0A0');
     // 図形描画
-    ellipse(0, 0, 50);
-    ellipse(0, 100, 50);
-    o.draw();
-}
-
-function e() {
-    ellipse(100, 400, 50);
+    dots.forEach(dot => {
+        dot.draw();
+    });
 }
 
 function randomInt(min, max) {
@@ -56,3 +58,4 @@ function randomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
 }
+
