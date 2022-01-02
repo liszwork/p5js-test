@@ -98,8 +98,8 @@ function draw() {
     for (let i = 0; i < del_idxs.length; i++) {
         dots.push(generate());
     }
-    console.log('dots len ' + dots.length);
-    console.log(dots)
+    
+    log_display();
 }
 
 function randomInt(min, max) {
@@ -112,4 +112,21 @@ function generate() {
     const x = randomInt(0, width);
     const y = randomInt(0, height);
     return new Circle(x, y, DOT_SIZE, '#AAB');
+}
+
+function log_display() {
+    const h = 10;
+    let x = 0;
+    let y = h;
+    const msgs = [
+        `frameCount: ${frameCount}`,
+        `dot num: ${dots.length}`,
+    ]
+    fill('rgba(0, 0, 150, 0.25)');
+    rect(0, 0, 100, 25);
+    fill('#AAB');
+    msgs.forEach(msg => {
+        text(msg, x, y);
+        y += h;
+    });
 }
