@@ -5,8 +5,14 @@ class Circle {
         this.size = size;
         this.color = color;
         this.is_debug = is_debug;
-        this.movex = randomInt(-5, 5);
-        this.movey = randomInt(-5, 5);
+        this.movex = randomInt(-30, 30) * 0.1;
+        if ( -1 < this.movex && this.movex < 1 ) {
+            this.movex = 1;
+        }
+        this.movey = randomInt(-30, 30) * 0.1;
+        if ( -1 < this.movey && this.movey < 1 ) {
+            this.movey = 1;
+        }
     }
     draw(color = '', is_update_color = false) {
         if (color.length) {

@@ -5,13 +5,19 @@ const DOT_SIZE = 5;
 const NEAR_RANGE = 30;
 
 let dots = [];
+const params = {
+    color: '#2d25ac'
+};
 
 function setup() {
     //キャンバスを作成
     createCanvas(400, 600);
     //背景色
     background(COLOR_BG);
-
+    // tweakpane
+    const pane = new Tweakpane.Pane();
+    pane.addInput(params, 'color');
+    // dots
     for ( let i = 0; i < MAX_DOTS; i++ ) {
         dots.push(generate());
     }
@@ -19,13 +25,13 @@ function setup() {
 
 function draw() {
     background(COLOR_BG);
-    fill(COLOR_OBJ);
-    stroke(COLOR_OBJ);
+    fill(params.color);
+    stroke(params.color);
     // 図形描画
     const del_idxs = [];
     for (let curr_i = 0; curr_i < dots.length; curr_i++) {
         const curr_dot = dots[curr_i];
-        curr_dot.draw();
+        curr_dot.draw(params.color);
         for (let chk_i = curr_i + 1; chk_i < dots.length; chk_i++) {
             const chk_dot = dots[chk_i];
             if (curr_dot.is_near(chk_dot.x, chk_dot.y)) {
@@ -37,7 +43,7 @@ function draw() {
             del_idxs.push(curr_i);
         }
     }
-    console.log('delidx ' + del_idxs);
+    //console.log('delidx ' + del_idxs);
     for (let i = 0; i < del_idxs.length; i++) {
         const index = del_idxs[del_idxs.length - 1 - i];
         dots.splice(index, 1);
