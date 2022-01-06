@@ -1,12 +1,14 @@
 class Circle {
-    constructor(x, y, size, color, is_debug = false) {
+    constructor(x, y, size = 50, color = '#AAA', is_move = false, is_debug = false) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = color;
+        this.clear_move_setting();
+        if ( !is_move ) {
+            this.random_move_setting();
+        }
         this.is_debug = is_debug;
-        this.movex = randomInt(-5, 5);
-        this.movey = randomInt(-5, 5);
     }
     draw(color = '', is_update_color = false) {
         if (color.length) {
@@ -29,6 +31,20 @@ class Circle {
             return false;
         }
         return true;
+    }
+    clear_move_setting() {
+        this.movex = 0;
+        this.movey = 0;
+    }
+    random_move_setting() {
+        this.movex = randomInt(-50, 50) * 0.1;
+        if ( -1 < this.movex && this.movex < 1 ) {
+            this.movex = 1;
+        }
+        this.movey = randomInt(-50, 50) * 0.1;
+        if ( -1 < this.movey && this.movey < 1 ) {
+            this.movey = 1;
+        }
     }
     move () {
         this.x += this.movex;
