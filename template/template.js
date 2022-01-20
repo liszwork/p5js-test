@@ -17,13 +17,11 @@ function setup() {
 
 function setup_tweakpane() {
     const pane = new Tweakpane.Pane();
-    pane.addInput(params, 'color');
+    pane.addInput(params, 'mode');
 }
 
 function draw() {
     background(COLOR_BG);
-    fill(params.color);
-    stroke(params.color);
     // 図形描画
 
     log_display();
