@@ -1,12 +1,9 @@
 const COLOR_BG = '#000';
 const COLOR_OBJ = '#AAA';
-const MAX_DOTS = 200;
-const DOT_SIZE = 5;
-const NEAR_RANGE = 30;
 
 let dots = [];
 const params = {
-    color: '#2d25ac'
+    mode: 0,
 };
 
 function setup() {
@@ -15,6 +12,10 @@ function setup() {
     //背景色
     background(COLOR_BG);
     // tweakpane
+    setup_tweakpane();
+}
+
+function setup_tweakpane() {
     const pane = new Tweakpane.Pane();
     pane.addInput(params, 'color');
 }
@@ -26,12 +27,6 @@ function draw() {
     // 図形描画
 
     log_display();
-}
-
-function randomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
 }
 
 function log_display() {
