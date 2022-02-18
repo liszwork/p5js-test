@@ -38,7 +38,19 @@ function draw() {
     eye.draw();
   }
 
-  // log_display();
+  // fill('#aaf');
+  // stroke(0);
+  // beginShape();
+  // vertex(10, 10);
+  // vertex(300, 10);
+  // vertex(300, 100);
+  // vertex(250, 150);
+  // vertex(100, 100);
+  // vertex(100, 200);
+  // endShape(CLOSE);
+
+
+  log_display();
 }
 
 class Eye {
@@ -47,7 +59,8 @@ class Eye {
     this.pupil_size = this.eye_size * 0.5;
     this.pupil_r = this.pupil_size / 2;
     // this.is_initialized = false;
-    // this.lines = [];
+    this.iris_points = [];
+    this._create_iris_points(this.pupil_size / 2);
   }
   draw() {
     // 白目
@@ -85,35 +98,39 @@ class Eye {
     drawingContext.fillStyle = gra_piple_base;
     circle(cx, cy, size);
   }
-  _pupil_kousai(r) {
-    stroke(hsb(0, 100, 0, 0.22));
-    const angle_deg = 2;
-    const ofs = 5
+  _create_iris_points(_r) {
+    // 虹彩の作成
+    const angle_deg = 1;
+    const ofs = 15;
     for (let i = 0; i < 360 / angle_deg; i++) {
+      const r = random(_r * 0.6, _r);
       const theta_deg = angle_deg * i;
-      // console.log(theta_deg)
-      switch (theta_deg) {
-        case 0:
-          line(cx, cy, cx, cy - r + ofs);
-          break;
-        case 90:
-          line(cx, cy, cx + r - ofs, cy);
-          break;
-        case 180:
-          line(cx, cy, cx, cy + r - ofs);
-          break;
-        case 270:
-          line(cx, cy, cx - r + ofs, cy);
-          break;
-        default:
-          const theta = radians(theta_deg);
-          let [x, y] = this.get_xy(theta, r - ofs);
-          x += cx;
-          y += cy;
-          line(cx, cy, x, y);
-          break;
-      }
+      const theta = radians(theta_deg);
+      let [x, y] = this.get_xy(theta, r - ofs);
+      x += cx;
+      y += cy;
+      this.iris_points.push({ x: x, y: y });
     }
+  }
+  _pupil_iris(r) {
+    blendMode(OVERLAY);
+    noStroke();
+    const gradient = drawingContext.createLinearGradient(cx, cy - r, cx, cy + r);
+    const color_a = color(`rgba(155, 155, 155, 0.6)`);
+    const color_b = color(`rgba(126, 126, 126, 0.6)`);
+    const color_c = color(`rgba(75, 75, 75, 0.6)`);
+    gradient.addColorStop(0.3, color_a);
+    gradient.addColorStop(0.5, color_b);
+    gradient.addColorStop(1.0, color_c);
+    //上で指定したグラデーション内容を塗りつぶしスタイルに代入する
+    drawingContext.fillStyle = gradient;
+
+    beginShape();
+    for (const p of this.iris_points) {
+      vertex(p.x, p.y);
+    }
+    endShape(CLOSE);
+    blendMode(BLEND);
   }
   _pupil_doukou(size) {
     noStroke();
@@ -128,10 +145,9 @@ class Eye {
     // 瞳
     this._pupil_base(size, r);
     // 虹彩
-    this._pupil_kousai(r)
+    this._pupil_iris(r);
     // 瞳孔
     this._pupil_doukou(doukou_size);
-    // test_noise_line();
   }
   get_xy(theta, r) {
     const x = r * sin(theta);
@@ -139,35 +155,6 @@ class Eye {
     // msgs.push(`get_xy: θ: ${round(degrees(theta), 3)} x, y=${round(x, 0)}, ${round(y, 0)}`);
     return [x, y];
   }
-}
-
-const items = [];
-function test_noise_line() {
-  if (!is_initialized) {
-    is_initialized = true;
-    for (let i = 0; i < 10; i++) {
-      const y = height - 110 + (10 * i);
-      // const n = round(noise(width) * random(20) * 10 / 10, 0);
-      // const n = round(noise(width * i)*10, 0);
-      const n = round(noise(i) * 2, 0);
-      items.push({
-        x1: 0,
-        y1: y,
-        x2: width,
-        y2: y,
-        wright: n,
-      });
-    }
-  }
-  let m = 'weigt: ';
-  for (const item of items) {
-    m += `${item.wright}, `;
-    strokeWeight(item.wright);
-    line(item.x1, item.y1, item.x2, item.y2);
-  }
-  msgs.push(m)
-  // normalize
-  strokeWeight(1);
 }
 
 
@@ -193,7 +180,6 @@ function log_display() {
   const offset = 5;
   let x = offset;
   let y = h + offset;
-  msgs.push(`frameCount: \${frameCount}`);
   fill('rgba(0, 0, 150, 0.25)');
   rect(0, 0, 300, 20 * msgs.length);
   noStroke();
